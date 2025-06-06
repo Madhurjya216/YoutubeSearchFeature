@@ -2,9 +2,13 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>StreamTube</title>
+    <title>StreamTube - Search for Youtube Videos</title>
     <link rel="stylesheet" href="../style/index.css" />
-    <script src="https://kit.fontawesome.com/3f167df4c7.js" crossorigin="anonymous"></script>
+    <script
+      src="https://kit.fontawesome.com/3f167df4c7.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="icon" href="../images/favicon.ico" type="image/x-icon" />
   </head>
   <body>
     <h1 id="logo">StreamTube</h1>
@@ -12,19 +16,15 @@
       <h1>What You Are Looking For?</h1>
 
       <form action="/search" method="POST">
-        <!-- Existing keyword input -->
+        <!-- keyword input -->
         <input
           type="text"
           name="query"
           placeholder="Search videos..."
           required
         />
-        <button type="submit" class="search_button">
-          <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
-      </form>
 
-        <!-- New: Video Type Selection -->
+        <!-- videoType selector now inside the form -->
         <div class="type">
           <label for="videoType">Video Type:</label>
           <select name="videoType" id="videoType">
@@ -34,7 +34,10 @@
           </select>
         </div>
 
-        
+        <button type="submit" class="search_button">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </form>
     </div>
   </body>
 </html>

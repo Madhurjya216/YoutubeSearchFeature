@@ -1,34 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Results for "<%= query %>"</title>
-</head>
-<body>
-  <h1>
-    Results for "<%= query %>" 
-    <% if (videoType && videoType !== 'any') { %>
-      (Only <%= videoType %> videos)
-    <% } %>
-  </h1>
-
-  <% if (videos && videos.length > 0) { %>
-    <% videos.forEach(video => { %>
-      <div style="margin-bottom: 30px;">
-        <h2><%= video.snippet.title %></h2>
-        <a href="https://www.youtube.com/watch?v=<%= video.id.videoId %>" target="_blank">
-          <img 
-            src="<%= video.snippet.thumbnails.medium.url %>" 
+  <head>
+    <meta charset="UTF-8" />
+    <title>StreamTube - <%= query %></title>
+    <link rel="stylesheet" href="../style/result.css" />
+    <link rel="icon" href="../images/favicon.ico" type="image/x-icon" />
+  </head>
+  <body>
+    <!-- <h1>
+      Results for "<%= query %>" <% if (videoType && videoType !== 'any') { %>
+      (Only <%= videoType %> videos) <% } %>
+    </h1> -->
+    <div class="main_res">
+      <% if (videos && videos.length > 0) { %> <% videos.forEach(video => { %>
+      <div class="video" style="margin-bottom: 30px">
+        <a
+          href="https://www.youtube.com/watch?v=<%= video.id.videoId %>"
+          target="_blank"
+        >
+          <img
+            src="<%= video.snippet.thumbnails.medium.url %>"
             alt="thumbnail"
           />
         </a>
-        <p><%= video.snippet.description %></p>
+        <h2><%= video.snippet.title %></h2>
+        <!-- <p><%= video.snippet.description %></p> -->
       </div>
-    <% }) %>
-  <% } else { %>
-    <p>No videos found for your query.</p>
-  <% } %>
-
-  <a href="/">Search Again</a>
-</body>
+      <% }) %> <% } else { %>
+      <p>No videos found for your query.</p>
+      <% } %>
+    </div>
+    <a id="back" href="/">Search Again</a>
+  </body>
 </html>
