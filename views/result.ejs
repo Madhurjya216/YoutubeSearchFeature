@@ -7,29 +7,121 @@
     <link rel="icon" href="../images/favicon.ico" type="image/x-icon" />
   </head>
   <body>
-    <!-- <h1>
-      Results for "<%= query %>" <% if (videoType && videoType !== 'any') { %>
-      (Only <%= videoType %> videos) <% } %>
-    </h1> -->
     <div class="main_res">
-      <% if (videos && videos.length > 0) { %> <% videos.forEach(video => { %>
+      <% if (videos && videos.length > 0) { %> 
+      <% videos.forEach(video => { %>
       <div class="video" style="margin-bottom: 30px">
-        <a
-          href="https://www.youtube.com/watch?v=<%= video.id.videoId %>"
-          target="_blank"
-        >
+        <div class="video-thumbnail" 
+             data-video-id="<%= video.id.videoId %>" 
+             data-video-title="<%= video.snippet.title %>">
           <img
             src="<%= video.snippet.thumbnails.medium.url %>"
             alt="thumbnail"
           />
-        </a>
+          <div class="play-overlay">
+            <div class="play-button">▶</div>
+          </div>
+        </div>
         <h2><%= video.snippet.title %></h2>
-        <!-- <p><%= video.snippet.description %></p> -->
       </div>
-      <% }) %> <% } else { %>
+      <% }) %> 
+      <% } else { %>
       <p>No videos found for your query.</p>
       <% } %>
     </div>
+    
+    <!-- Modal -->
+    <div id="videoModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modalTitle"></h3>
+          <span class="close-btn" onclick="closeModal()">&times;</span>
+        </div>
+        <div class="video-container">
+          <iframe id="youtubePlayer" 
+                  width="100%" 
+                  height="100%" 
+                  frameborder="0" 
+                  allowfullscreen>
+          </iframe>
+        </div>
+        <div class="modal-controls">
+          <button id="playPauseBtn" onclick="togglePlayPause()">Pause</button>
+        </div>
+      </div>
+    </div>
+    
     <a id="back" href="/">Search Again</a>
+
+    <script>
+      let player;
+      let isPlaying = true;
+
+      // Event delegation for video thumbnails
+      document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('click', function(e) {
+          const thumbnail = e.target.closest('.video-thumbnail');
+          if (thumbnail) {
+            const videoId = thumbnail.dataset.videoId;
+            const title = thumbnail.dataset.videoTitle;
+            openModal(videoId, title);
+          }
+        });
+      });
+
+      function openModal(videoId, title) {
+        const modal = document.getElementById('videoModal');
+        const iframe = document.getElementById('youtubePlayer');
+        const modalTitle = document.getElementById('modalTitle');
+        
+        modalTitle.textContent = title;
+        iframe.src = `https://www.youtube.com/embed/${videoId}?enablejsapi=1&autoplay=1`;
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        
+        // Reset play/pause button
+        document.getElementById('playPauseBtn').textContent = 'Pause';
+        isPlaying = true;
+      }
+
+      function closeModal() {
+        const modal = document.getElementById('videoModal');
+        const iframe = document.getElementById('youtubePlayer');
+        
+        iframe.src = '';
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+      }
+
+      function togglePlayPause() {
+        const iframe = document.getElementById('youtubePlayer');
+        const btn = document.getElementById('playPauseBtn');
+        
+        if (isPlaying) {
+          iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+          btn.textContent = 'Play';
+          isPlaying = false;
+        } else {
+          iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+          btn.textContent = 'Pause';
+          isPlaying = true;
+        }
+      }
+
+      // Close modal when clicking outside
+      window.onclick = function(event) {
+        const modal = document.getElementById('videoModal');
+        if (event.target === modal) {
+          closeModal();
+        }
+      }
+
+      // Close modal with Escape key
+      document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+          closeModal();
+        }
+      });
+    </script>
   </body>
 </html>
